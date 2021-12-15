@@ -8,10 +8,10 @@ namespace DependencyInjectionContainer
 {
     public interface IDependencyConfiguration
     {
-        IDictionary<Type, IEnumerable<Type>> TransientDependencies { get; }
-        IDictionary<Type, IEnumerable<Type>> SingletonDependencies { get; }
-        IDictionary<Type, IDictionary<Enum, Type>> TransientNamedDependencies { get; }
-        IDictionary<Type, IDictionary<Enum, Type>> SingletonNamedDependencies { get; }
+        Dictionary<Type, List<Type>> TransientDependencies { get; }
+        Dictionary<Type, List<Type>> SingletonDependencies { get; }
+        Dictionary<Type, Dictionary<Enum, Type>> TransientNamedDependencies { get; }
+        Dictionary<Type, Dictionary<Enum, Type>> SingletonNamedDependencies { get; }
 
         public void AddTransient<TDependency, TImplementation>() where TImplementation : TDependency;
 

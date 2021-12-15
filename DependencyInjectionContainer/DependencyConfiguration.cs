@@ -8,21 +8,21 @@ namespace DependencyInjectionContainer
 {
     public class DependencyConfiguration : IDependencyConfiguration
     {
-        private Dictionary<Type, List<Type>> _transientDependencies;
-        private Dictionary<Type, List<Type>> _singletonDependencies;
-        private Dictionary<Type, Dictionary<Enum, Type>> _transientNamedDependencies;
-        private Dictionary<Type, Dictionary<Enum, Type>> _singletonNamedDependencies;
+        private Dictionary<Type, List<Type>> _transientDependencies = new Dictionary<Type, List<Type>>();
+        private Dictionary<Type, List<Type>> _singletonDependencies = new Dictionary<Type, List<Type>>();
+        private Dictionary<Type, Dictionary<Enum, Type>> _transientNamedDependencies = new Dictionary<Type, Dictionary<Enum, Type>>();
+        private Dictionary<Type, Dictionary<Enum, Type>> _singletonNamedDependencies = new Dictionary<Type, Dictionary<Enum, Type>>();
 
         public DependencyConfiguration()
-        { 
-        }
-        public IDictionary<Type, IEnumerable<Type>> TransientDependencies => (IDictionary<Type, IEnumerable<Type>>)_transientDependencies;
+        { }
 
-        public IDictionary<Type, IEnumerable<Type>> SingletonDependencies => (IDictionary<Type, IEnumerable<Type>>)_singletonDependencies;
+        public Dictionary<Type, List<Type>> TransientDependencies => _transientDependencies;
 
-        public IDictionary<Type, IDictionary<Enum, Type>> TransientNamedDependencies => (IDictionary<Type, IDictionary<Enum, Type>>)_transientNamedDependencies;
+        public Dictionary<Type, List<Type>> SingletonDependencies => _singletonDependencies;
 
-        public IDictionary<Type, IDictionary<Enum, Type>> SingletonNamedDependencies => (IDictionary<Type, IDictionary<Enum, Type>>)_singletonNamedDependencies;
+        public Dictionary<Type, Dictionary<Enum, Type>> TransientNamedDependencies => _transientNamedDependencies;
+
+        public Dictionary<Type, Dictionary<Enum, Type>> SingletonNamedDependencies => _singletonNamedDependencies;
 
         public void AddSingleton<TDependency, TImplementation>() where TImplementation : TDependency
         {
@@ -32,7 +32,7 @@ namespace DependencyInjectionContainer
         public void AddSingleton<TDependency, TImplementation>(Enum name) where TImplementation : TDependency
         {
             AddSingleton(typeof(TDependency), typeof(TImplementation));
-            if (_singletonNamedDependencies.ContainsKey(typeof(TDependency)))
+            if (!_singletonNamedDependencies.ContainsKey(typeof(TDependency)))
             {
                 _singletonNamedDependencies.Add(typeof(TDependency), new Dictionary<Enum, Type>());
             }
@@ -41,7 +41,7 @@ namespace DependencyInjectionContainer
 
         public void AddSingleton(Type dependecy, Type implementation)
         {
-            if (_singletonDependencies.ContainsKey(dependecy))
+            if (!_singletonDependencies.ContainsKey(dependecy))
             {
                 _singletonDependencies.Add(dependecy, new List<Type>());
             }
@@ -56,20 +56,20 @@ namespace DependencyInjectionContainer
         public void AddTransient<TDependency, TImplementation>(Enum name) where TImplementation : TDependency
         {
             AddTransient(typeof(TDependency), typeof(TImplementation));
-            if (_transientNamedDependencies.ContainsKey(typeof(TDependency)))
+            if (!_transientNamedDependencies.ContainsKey(typeof(TDependency)))
             {
                 _transientNamedDependencies.Add(typeof(TDependency), new Dictionary<Enum, Type>());
             }
             _transientNamedDependencies[typeof(TDependency)].Add(name, typeof(TImplementation));
         }
 
-        public void AddTransient(Type dependecy, Type implementation)
+        public void AddTransient(Type dependency, Type implementation)
         {
-            if (_transientDependencies.ContainsKey(dependecy))
+            if (!_transientDependencies.ContainsKey(dependency))
             {
-                _transientDependencies.Add(dependecy, new List<Type>());
+                _transientDependencies.Add(dependency, new List<Type>());
             }
-            _transientDependencies[dependecy].Add(implementation);
+            _transientDependencies[dependency].Add(implementation);
         }
     }
 }
